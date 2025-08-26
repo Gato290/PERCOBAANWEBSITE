@@ -1,43 +1,266 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SCRIPT PASTEBIN - Home</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SCRIPT PASTEBIN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- SPLASH SCREEN --- */
+    body, html {
+      margin: 0;
+      height: 100%;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+      background: #05010f;
+    }
+    #splash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #0a0a1f, #05010f 80%);
+      z-index: 9999;
+      animation: splashOut 3.5s forwards ease-in-out;
+    }
+    #splash h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: .4rem;
+      color: #fff;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: perspective(800px) rotateX(35deg) scale(0.8);
+      animation: welcome3D 3s forwards ease-out, neonPulse 2s infinite alternate;
+      text-align: center;
+    }
+
+    @keyframes welcome3D {
+      0% {opacity: 0; transform: perspective(800px) rotateX(65deg) translateY(50px) scale(0.5);}
+      40% {opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0) scale(1.05);
+        text-shadow:0 0 10px #60a5fa,0 0 20px #9333ea,0 0 40px #2563eb;}
+      70% {transform: perspective(800px) rotateX(-5deg) scale(0.95);
+        text-shadow:0 0 12px #60a5fa,0 0 24px #9333ea,0 0 48px #2563eb,0 0 96px #9333ea;}
+      100% {opacity: 1; transform: perspective(800px) rotateX(0deg) scale(1);
+        text-shadow:0 0 8px #4f46e5,0 0 16px #6366f1,0 0 32px #9333ea,0 0 64px #2563eb;}
+    }
+    @keyframes neonPulse {
+      from {text-shadow:0 0 6px #4f46e5,0 0 12px #6366f1,0 0 24px #9333ea,0 0 48px #2563eb;}
+      to   {text-shadow:0 0 12px #60a5fa,0 0 24px #a855f7,0 0 48px #9333ea,0 0 96px #2563eb;}
+    }
+    @keyframes splashOut {0%, 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; pointer-events: none; }}
+
+    main {opacity: 0; transition: opacity 1s ease;}
+    main.show {opacity: 1;}
+
+    /* --- THEME VARIABLES --- */
+    :root{
+      --bg:#f7f7f9;--text:#1f2328;--muted:#6b7280;
+      --card:#ffffffcc;--shadow:0 6px 18px rgba(0,0,0,.15);
+      --shadow-hover:0 20px 40px rgba(0,0,0,.35);--border:#e5e7eb;
+      --accent:#2563eb;--input-bg:#fff;
+      --gradient:linear-gradient(135deg,#2563eb,#9333ea);
+    }
+    [data-theme="dark"]{
+      --bg:#0f1216;--text:#e5e7eb;--muted:#9ca3af;
+      --card:#141922cc;--shadow:0 6px 18px rgba(0,0,0,.55);
+      --shadow-hover:0 20px 40px rgba(0,0,0,.75);--border:#1f2937;
+      --accent:#60a5fa;--input-bg:#0b0f14;
+      --gradient:linear-gradient(135deg,#60a5fa,#a855f7);
+    }
+
+    *{ box-sizing:border-box;}
+    html,body{ height:100%; margin:0;}
+    body{ padding:24px; background:var(--bg); color:var(--text); user-select:none;}
+    header{ max-width:1200px; margin:0 auto 26px; display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; padding:14px 18px; border-radius:18px; background:var(--gradient); color:#fff; box-shadow:var(--shadow);}
+    .title{ font-size:clamp(20px,2.5vw,30px); font-weight:800;}
+    .badge{ font-size:11px; border:1px solid rgba(255,255,255,.4); padding:3px 8px; border-radius:999px; margin-left:6px;}
+    .controls{ display:flex; gap:10px; align-items:center;}
+    .search{ display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--border); border-radius:12px; background:var(--input-bg); min-width:260px; box-shadow:var(--shadow);}
+    .search input{ border:0; outline:0; background:transparent; color:var(--text); width:240px; font-size:14px;}
+    .search input::placeholder{ color:var(--muted);}
+    .toggle{ border:1px solid var(--border); background:var(--card); color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:var(--shadow);}
+    .discord-btn{ display:flex; align-items:center; justify-content:center; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:8px 10px; box-shadow:var(--shadow); transition:.25s;}
+    .discord-btn img{ width:22px; height:22px; filter:invert(42%) sepia(82%) saturate(300%) hue-rotate(200deg);}
+    .discord-btn:hover{ transform:translateY(-2px) scale(1.05); box-shadow:var(--shadow-hover); background:var(--gradient);}
+    .discord-btn:hover img{ filter:brightness(0) invert(1);}
+    .grid{ max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:22px;}
+    
+    /* --- CARD 3D --- */
+    .card {
+      position: relative;
+      background: var(--card);
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transform-style: preserve-3d;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .card:hover {
+      transform: perspective(1000px) rotateX(6deg) rotateY(6deg) scale(1.02);
+      box-shadow: var(--shadow-hover);
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(0,0,0,0.2));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+      mix-blend-mode: overlay;
+    }
+    .card:hover::before { opacity: 1; }
+
+    .thumb-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #111;
+      transform: translateZ(25px);
+    }
+    .thumb-wrapper img.thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .5s ease;
+    }
+    .card:hover .thumb {
+      transform: scale(1.1) translateZ(40px);
+    }
+
+    .tag{ position:absolute; top:10px; left:10px; background:var(--gradient); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:999px; z-index:2;}
+    .favorite{ position:absolute; top:10px; right:10px; font-size:16px; cursor:pointer; background:transparent; border:none; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,.6); transition:.2s; z-index:2;}
+    .favorite:hover{ transform:scale(1.2); color:#ff4d6d;}
+    .favorite.active{ color:#ff4d6d;}
+
+    .content {
+      padding: 14px 16px 18px;
+      transform: translateZ(30px);
+    }
+    .title-sm{ margin:0 0 8px; font-size:15px; font-weight:800; line-height:1.35; color:var(--text);}
+    .date{ display:block; color:var(--muted); font-size:13px; margin-bottom:8px;}
+    .desc{ color:var(--text); opacity:.85; font-size:14px; line-height:1.45; margin:0;}
+    a.card-link{ color:inherit; text-decoration:none; display:block; height:100%;}
+    .empty{ max-width:1200px; margin:24px auto; padding:16px 18px; border-radius:12px; border:1px dashed var(--border); color:var(--muted); display:none; text-align:center;}
+
+    /* --- BUTTON NAV --- */
+    .btn-nav {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: .25s;
+    }
+    .btn-nav:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: var(--shadow-hover);
+      background: var(--gradient);
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
+
+  <div id="splash"><h1>WELCOME TO SCRIPT PASTEBIN</h1></div>
+
   <header>
-    <nav class="navbar">
-      <a href="index.html">Home</a>
-      <a href="scripts.html">Scripts</a>
-      <a href="mobile.html">Mobile Scripts</a>
-      <a href="executor.html">Executor</a>
-    </nav>
+    <div class="title">SCRIPTPASTEBIN <span class="badge" id="countBadge"></span></div>
+    <div class="controls">
+      <label class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="search" type="text" placeholder="Search script..." autocomplete="off"/>
+      </label>
+
+      <!-- tombol navigasi -->
+      <button onclick="window.location.href='index.html'" class="btn-nav">Home</button>
+      <button onclick="window.location.href='script.html'" class="btn-nav">Script</button>
+      <button onclick="window.location.href='executor.html'" class="btn-nav">Executor</button>
+
+      <a href="https://discord.gg/ECxQFc97F5" target="_blank" rel="noopener noreferrer" class="discord-btn" aria-label="Join our Discord">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/discord.svg" alt="Discord"/>
+      </a>
+      <button id="themeToggle" class="toggle" type="button" aria-pressed="false">
+        <span id="themeIcon" role="img" aria-label="Theme icon">🌞</span>
+        <span id="themeLabel">Light</span>
+      </button>
+    </div>
   </header>
 
   <main>
-    <h1 class="page-title">All Cards</h1>
     <div class="grid" id="grid">
-      <!-- Card Example -->
-      <a class="card-link" href="https://linkvertise.com/" target="_blank" rel="noopener noreferrer">
+      <a class="card-link" href="https://linkvertise.com/" target="_blank" rel="noopener noreferrer"
+         data-title="HDragons Hub - DIG SCRIPT"
+         data-desc="DIG SCRIPT - AUTO DIG, AUTO SELL, TELEPORT, TELEPORT TO SHOVEL, TELEPORT TO ISLAND 1, ISLAND 2, ISLAND 3, FAST DIG, INSTANT DIG, SLOW DIG, [BEST]">
         <article class="card">
           <div class="thumb-wrapper">
             <span class="tag">BEST</span>
-            <button type="button" class="favorite" data-id="dig1">⭐</button>
-            <img class="thumb" src="https://i.imgur.com/Sdvd9Nt.jpeg" alt="HDragons Hub – Dig Script"/>
+            <button type="button" class="favorite" data-id="dig1" aria-label="Add to favorites" role="button">⭐</button>
+            <img class="thumb" loading="lazy" src="https://i.imgur.com/Sdvd9Nt.jpeg" alt="HDragons Hub – Dig Script"/>
           </div>
           <div class="content">
             <h3 class="title-sm">HDragons Hub – Dig Script</h3>
             <small class="date">21 August 2025</small>
-            <p class="desc">DIG SCRIPT - AUTO DIG, AUTO SELL, TELEPORT, FAST DIG, INSTANT DIG...</p>
+            <p class="desc">DIG SCRIPT - AUTO DIG, AUTO SELL, TELEPORT, TELEPORT TO SHOVEL, TELEPORT TO ISLAND 1, ISLAND 2, ISLAND 3, FAST DIG, INSTANT DIG, SLOW DIG, [BEST]</p>
           </div>
         </article>
       </a>
-
-      <!-- Tambahkan card lain di sini -->
     </div>
+    <div id="empty" class="empty">There are no results for this search.</div>
   </main>
+
+  <script>
+    // SPLASH
+    setTimeout(()=>{document.getElementById("splash").style.display="none";document.querySelector("main").classList.add("show");},3500);
+
+    // THEME
+    const html=document.documentElement,btn=document.getElementById('themeToggle'),icon=document.getElementById('themeIcon'),label=document.getElementById('themeLabel');
+    const saved=localStorage.getItem('theme');const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initTheme=saved||(prefersDark?'dark':'light');setTheme(initTheme);
+    btn.addEventListener('click',()=>{const next=html.getAttribute('data-theme')==='dark'?'light':'dark';setTheme(next);localStorage.setItem('theme',next);});
+    function setTheme(mode){html.setAttribute('data-theme',mode);const isDark=mode==='dark';btn.setAttribute('aria-pressed',String(isDark));icon.textContent=isDark?'🌙':'🌞';label.textContent=isDark?'Dark':'Light';}
+
+    // SEARCH
+    const input=document.getElementById('search'),grid=document.getElementById('grid'),items=Array.from(grid.querySelectorAll('.card-link')),empty=document.getElementById('empty'),countBadge=document.getElementById('countBadge');
+    updateCount(items.length);
+    input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase();let shown=0;items.forEach(a=>{const text=(a.dataset.title+' '+a.dataset.desc).toLowerCase();const match=q===''||text.includes(q);a.style.display=match?'block':'none';if(match)shown++;});empty.style.display=shown?'none':'block';updateCount(shown);});
+    function updateCount(n){countBadge.textContent=n+(n===1?' item':' items');}
+
+    // FAVORITES
+    const favs=JSON.parse(localStorage.getItem("favorites")||"[]");
+    document.querySelectorAll(".favorite").forEach(fav=>{const id=fav.dataset.id;if(favs.includes(id))fav.classList.add("active");fav.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();if(fav.classList.contains("active")){fav.classList.remove("active");const idx=favs.indexOf(id);if(idx>-1)favs.splice(idx,1);}else{fav.classList.add("active");favs.push(id);}localStorage.setItem("favorites",JSON.stringify(favs));});});
+
+    // SECURITY
+    document.addEventListener("contextmenu",e=>e.preventDefault());
+    document.querySelectorAll("img").forEach(img=>{if(!img.hasAttribute("draggable")){img.setAttribute("draggable","false");}});
+
+    // TILT EFFECT
+    document.querySelectorAll(".card").forEach(card=>{
+      card.addEventListener("mousemove", e=>{
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * 6; 
+        const rotateY = ((x - centerX) / centerX) * -6;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+      });
+      card.addEventListener("mouseleave", ()=>{
+        card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)";
+      });
+    });
+  </script>
 </body>
 </html>
