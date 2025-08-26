@@ -1,36 +1,43 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Halaman Utama</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SCRIPT PASTEBIN - Home</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
-  <div class="container">
-    <a href="halaman1.html" class="card">
-      <img src="https://via.placeholder.com/250x150" alt="Card 1">
-      <div class="card-body">
-        <h3 class="card-title">Card 1</h3>
-        <p class="card-text">Klik card ini untuk membuka halaman 1.</p>
-      </div>
-    </a>
+  <header>
+    <nav class="navbar">
+      <a href="index.html">Home</a>
+      <a href="scripts.html">Scripts</a>
+      <a href="mobile.html">Mobile Scripts</a>
+      <a href="executor.html">Executor</a>
+    </nav>
+  </header>
 
-    <a href="halaman2.html" class="card">
-      <img src="https://via.placeholder.com/250x150" alt="Card 2">
-      <div class="card-body">
-        <h3 class="card-title">Card 2</h3>
-        <p class="card-text">Klik card ini untuk membuka halaman 2.</p>
-      </div>
-    </a>
+  <main>
+    <h1 class="page-title">All Cards</h1>
+    <div class="grid" id="grid">
+      <!-- Card Example -->
+      <a class="card-link" href="https://linkvertise.com/" target="_blank" rel="noopener noreferrer">
+        <article class="card">
+          <div class="thumb-wrapper">
+            <span class="tag">BEST</span>
+            <button type="button" class="favorite" data-id="dig1">⭐</button>
+            <img class="thumb" src="https://i.imgur.com/Sdvd9Nt.jpeg" alt="HDragons Hub – Dig Script"/>
+          </div>
+          <div class="content">
+            <h3 class="title-sm">HDragons Hub – Dig Script</h3>
+            <small class="date">21 August 2025</small>
+            <p class="desc">DIG SCRIPT - AUTO DIG, AUTO SELL, TELEPORT, FAST DIG, INSTANT DIG...</p>
+          </div>
+        </article>
+      </a>
 
-    <a href="halaman3.html" class="card">
-      <img src="https://via.placeholder.com/250x150" alt="Card 3">
-      <div class="card-body">
-        <h3 class="card-title">Card 3</h3>
-        <p class="card-text">Klik card ini untuk membuka halaman 3.</p>
-      </div>
-    </a>
-  </div>
+      <!-- Tambahkan card lain di sini -->
+    </div>
+  </main>
 </body>
 </html>
